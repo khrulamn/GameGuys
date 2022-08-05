@@ -55,7 +55,7 @@ const logInUser = async (req, res) => {
     pwAttempt = req.body.password
     try {
         let user = await User.findOne({ username: usernameAttempt })
-        console.log(user)
+        console.log(user.username, "logged in")
         if (user) {
             const validPassword = await bcrypt.compare(pwAttempt, user.password)
             if (validPassword) {

@@ -6,7 +6,7 @@ export default function Home(){
     
 
     return(
-        <div className="bg-secondaryColor min-h-[calc(100vh-10rem)] p-10">
+        <div className="bg-secondaryColor min-h-[calc(100vh-10rem)] p-10 font-main">
             <InStock console={true} game={false}/>
             <InStock console={false} game={true}/>
         </div>

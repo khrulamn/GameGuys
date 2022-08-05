@@ -17,17 +17,16 @@ export default function GameModal(props) {
 
     function addToCart() {
         const token = sessionStorage.getItem("token");
-        console.log(token)
 
-        var data = {
+        const data = {
             "console": null,
             "game": {
-                gameID : props.data._id,
-                quantity : amount
+                gameID: props.data._id,
+                quantity: amount
             }
         };
 
-        var config = {
+        const config = {
             method: 'post',
             url: 'http://localhost:4444/add-to-cart',
             headers: {
@@ -39,16 +38,21 @@ export default function GameModal(props) {
 
         axios(config)
             .then(function (response) {
-                if(response.data.error){
-                    alert('error')
-                } else {
-                    alert('added to cart')
-                    console.log(JSON.stringify(response.data));
-                    props.clickHandler()
-                } 
+                console.log("response", response)
+                // if(response.data.error){
+                //     alert('error, please try again later')
+                // } else {
+                //     alert('added to cart')
+                //     console.log(JSON.stringify(response.data));
+                // } 
+            })
+            .then(() => {
+                props.clickHandler()
             })
             .catch(function (error) {
-                console.log(error);
+                console.log('error response', error.response);
+                console.log('error request', error.request);
+                console.log('error message', error.message)
             });
     }
 
@@ -77,21 +81,21 @@ export default function GameModal(props) {
                             </p>
                             <p className="my-4 text-slate-300 text-lg leading-relaxed">
                                 {props.data.description}
-                                <a className="ml-4 text-slate-500 hover:text-slate-300" href={props.data.trailer} target="_blank" rel="noreferrer">trailer..</a>
+                                <a className="ml-4 text-slate-500 hover:text-slate-300 ease-linear transition-all duration-150" href={props.data.trailer} target="_blank" rel="noreferrer">trailer..</a>
                             </p>
                             <div className='flex justify-between'>
                                 <p className="text-slate-400">In stock: {props.data.quantity}</p>
 
                                 <div className='flex items-center'>
-                                    <button className='text-white text-3xl font-extrabold mr-3' onClick={dec} disabled={amount < 1}>-</button>
+                                    <button className='text-white text-3xl font-sans font-extrabold mr-3 disabled:text-slate-600 hover:text-tertiaryColor ease-linear transition-all duration-150' onClick={dec} disabled={amount < 1}>-</button>
                                     <p className='text-tertiaryColor text-3xl font-medium mr-3'>{amount}</p>
-                                    <button className='text-white text-2xl font-extrabold mr-3' onClick={inc}>+</button>
+                                    <button className='text-white text-2xl font-sans font-extrabold mr-3 disabled:text-slate-600 hover:text-tertiaryColor ease-linear transition-all duration-150' onClick={inc} disabled={amount >= props.data.quantity}>+</button>
                                 </div>
                             </div>                        </div>
                         {/*footer*/}
                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                             <button
-                                className="text-slate-300 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                                className="text-slate-300 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 hover:text-red-500"
                                 type="button"
                                 onClick={() => props.clickHandler()}
                             >
@@ -101,7 +105,7 @@ export default function GameModal(props) {
                                 className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 disabled:bg-slate-500"
                                 type="button"
                                 onClick={addToCart}
-                                disabled={amount === 0}
+                                disabled={amount === 0 || props.data.quantity === 0}
                             >
                                 Add to Cart
                             </button>

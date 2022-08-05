@@ -28,7 +28,7 @@ export default function NavBar(props) {
         <nav className="flex justify-between bg-primaryColor h-40 w-full border-b border-solid border-slate-500">
             <div className="w-1/2 flex items-center">
                 <img className='ml-16 h-4/5' src={logo} alt="GameGuys logo" />
-                <h1 className='text-white text-5xl font-main font-medium hover:text-tertiaryColor hover:cursor-pointer'><a href="/">GameGuys</a></h1>
+                <h1 className='text-white text-5xl font-medium hover:text-tertiaryColor hover:cursor-pointer'><a href="/">GameGuys</a></h1>
             </div>
             <div className='flex justify-between items-center w-1/2'>
                 <div className=' w-4/5'>
