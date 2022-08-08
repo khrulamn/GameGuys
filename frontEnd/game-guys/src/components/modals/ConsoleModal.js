@@ -94,7 +94,7 @@ export default function ConsoleModal(props) {
                             </button>
 
                             <button
-                                className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 disabled:bg-slate-500"
+                                className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-200 disabled:bg-slate-500"
                                 type="button"
                                 onClick={addToCart}
                                 disabled={amount === 0 || props.data.quantity === 0}

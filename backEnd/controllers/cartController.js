@@ -46,9 +46,11 @@ async function addToCart(req, res) {
                     {
                         '$set': {'game_items.$.quantity':newQty}
                     })
-                    .then((err,result) => {
-                        if (err) res.status(400).send({ err })
-                        else res.status(200).send({ result })
+                    .then((result) => {
+                        res.status(200).send({ result })
+                    })
+                    .catch((err) => {
+                        res.status(400).send({err})
                     })
             }
         }
@@ -78,9 +80,11 @@ async function addToCart(req, res) {
                     {
                         '$set': {'console_items.$.quantity':newQty}
                     })
-                    .then((err,result) => {
-                        if (err) res.status(400).send({ err })
-                        else res.status(200).send({ result })
+                    .then((result) => {
+                        res.status(200).send({ result })
+                    })
+                    .catch((err) => {
+                        res.status(400).send({err})
                     })
             }
         }
@@ -123,7 +127,12 @@ async function getUserCart(req, res) {
     }
 }
 
+function removeFromCart (req,res) {
+    let data = req.body
+}
+
 module.exports = {
     addToCart,
-    getUserCart
+    getUserCart,
+    removeFromCart
 }

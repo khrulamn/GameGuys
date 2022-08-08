@@ -2,19 +2,29 @@ import React, { useState, useEffect } from 'react'
 
 const AuthContext = React.createContext({
 	isLoggedIn: false,
-	onLogout: () => {},
-	onLogin: () => {},
+	onLogout: () => { },
+	onLogin: () => { },
+	addedToCart: () => {},
+	addToCart:false
 })
 
 export const AuthContextProvider = (props) => {
 	const [isLoggedin, setIsLoggedin] = useState(false)
+	const [addToCart, setAddToCart] = useState(false)
 
-	useEffect (() => {
-		const sessionStorageLoggedIn = localStorage.getItem("isLoggedIn")
-		if (sessionStorageLoggedIn === '1'){
+	useEffect(() => {
+		const sessionStorageLoggedIn = sessionStorage.getItem("isLoggedIn")
+		if (sessionStorageLoggedIn === '1') {
 			setIsLoggedin(true)
 		}
 	}, [])
+
+	const addedToCart = () => {
+		setAddToCart(!addToCart)
+		setTimeout(() => {
+			setAddToCart(!addToCart)
+		}, 2000)
+	}
 
 	const logoutHandler = () => {
 		setIsLoggedin(false)
@@ -30,7 +40,8 @@ export const AuthContextProvider = (props) => {
 			isLoggedIn: isLoggedin,
 			onLogout: logoutHandler,
 			onLogin: loginHandler,
-
+			addedToCart: addedToCart,
+			addToCart: addToCart
 		}}>
 			{props.children}
 		</AuthContext.Provider>

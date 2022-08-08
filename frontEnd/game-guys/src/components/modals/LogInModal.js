@@ -1,56 +1,38 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import axios from 'axios'
 // import SuccessfulLogIn from './SuccessfulLogIn'
 import authContext from '../../context/authContext'
 
 export default function LogInModal(props) {
 
-    const [isLogin, setIsLogin] = useState(true)
-    const [email, setEmail] = useState("")
-    const [username, setUsername] = useState("")
-    const [usernameSignUp, setUsernameSignUp] = useState("")
-    const [password, setPassword] = useState("")
-    const [passwordSignUp, setPasswordSignUp] = useState("")
-    const [confirmPassword, setConfirmPassword] = useState("")
-
     const context = useContext(authContext)
+    const [isLogin, setIsLogin] = useState(true)
+    const [user, setUser] = useState({
+        email: "",
+        username: "",
+        usernameSignUp: "",
+        password: "",
+        passwordSignUp: "",
+        confirmPassword: "",
+    })
 
-    const emailEdited = (event) => {
-        setEmail(event.target.value)
+    const inputEdited = (e) => {
+        setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
-
-    const usernameEdited = (event) => {
-        setUsername(event.target.value)
-    }
-
-    const usernameSignUpEdited = (event) => {
-        setUsernameSignUp(event.target.value)
-    }
-
-    const passwordEdited = (event) => {
-        setPassword(event.target.value)
-    }
-
-    const passwordSignUpEdited = (event) => {
-        setPasswordSignUp(event.target.value)
-    }
-
-    const confirmPasswordEdited = (event) => {
-        setConfirmPassword(event.target.value)
-    }
-
 
     const toSignUp = () => {
         setIsLogin(!isLogin)
-        setUsername("")
-        setUsernameSignUp("")
-        setEmail("")
-        setPassword("")
-        setPasswordSignUp("")
-        setConfirmPassword("")
+        setUser({
+            email: "",
+            username: "",
+            usernameSignUp: "",
+            password: "",
+            passwordSignUp: "",
+            confirmPassword: "",
+        })
     }
 
-    
+
 
     // const signUpBtnDisable = () => {
     //     if(password !== ""){
@@ -64,13 +46,13 @@ export default function LogInModal(props) {
 
 
     function signUp() {
-        var data = JSON.stringify({
-            "email": email,
-            "username": usernameSignUp,
-            "password": passwordSignUp
+        const data = JSON.stringify({
+            "email": user.email,
+            "username": user.usernameSignUp,
+            "password": user.passwordSignUp
         });
 
-        var config = {
+        const config = {
             method: 'post',
             url: 'http://localhost:4444/signup',
             headers: {
@@ -82,10 +64,10 @@ export default function LogInModal(props) {
         axios(config)
             .then(function (response) {
                 console.log(JSON.stringify(response.data));
-                if (response.data.error){
+                if (response.data.error) {
                     console.log(response.data.error)
                 } else {
-                    logIn(usernameSignUp, passwordSignUp)
+                    logIn(user.usernameSignUp, user.passwordSignUp)
                 }
             })
             .catch(function (error) {
@@ -115,6 +97,7 @@ export default function LogInModal(props) {
                 // console.log(JSON.stringify(response.data));
                 props.setAvatar(data.avatar)
                 sessionStorage.setItem("token", data.token)
+                sessionStorage.setItem("avatar", data.avatar)
                 context.onLogin()
                 props.clickHandler()
             })
@@ -132,6 +115,13 @@ export default function LogInModal(props) {
                     <div className="relative w-auto my-6 mx-auto max-w-3xl">
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-primaryColor outline-none focus:outline-none px-12 py-7">
+                            <div className="absolute right-5 top-5">
+                                <button onClick={props.clickHandler}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6 hover:stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                             {/*header*/}
                             <div className="flex justify-center p-5 border-b border-solid border-slate-500 rounded-t mb-7
                             ">
@@ -146,7 +136,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='usernameLogin' className="sr-only">
                                         Username
                                     </label>
-                                    <input onChange={usernameEdited} type="text" required placeholder="Username" className=" relative block
+                                    <input onChange={inputEdited} name="username" type="text" required placeholder="Username" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-tertiaryColor
@@ -156,7 +146,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='passwordLogin' className="sr-only">
                                         Password
                                     </label>
-                                    <input onChange={passwordEdited} type="text" required placeholder="Password" className=" relative block
+                                    <input onChange={inputEdited} name="password" type="text" required placeholder="Password" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-red-500
@@ -171,8 +161,8 @@ export default function LogInModal(props) {
                                 <button
                                     className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 disabled:bg-slate-400"
                                     type="button"
-                                    onClick={() => logIn(username, password)}
-                                    disabled={!(username && password)}
+                                    onClick={() => logIn(user.username, user.password)}
+                                    disabled={!(user.username && user.password)}
                                 >
                                     Log in
                                 </button>
@@ -194,6 +184,13 @@ export default function LogInModal(props) {
                         {/*content*/}
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-primaryColor outline-none focus:outline-none px-12 py-7">
                             {/*header*/}
+                            <div className="absolute right-5 top-5">
+                                <button onClick={props.clickHandler}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6 hover:stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
                             <div className="flex justify-center p-5 border-b border-solid border-slate-500 rounded-t mb-7
                             ">
                                 <h3 className="text-3xl font-semibold text-white">
@@ -206,7 +203,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='email' className="sr-only">
                                         Email
                                     </label>
-                                    <input onChange={emailEdited} type="text" required placeholder="Email" className=" relative block
+                                    <input onChange={inputEdited} name="email" type="text" required placeholder="Email" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-tertiaryColor
@@ -216,7 +213,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='usernameSignup' className="sr-only">
                                         Username
                                     </label>
-                                    <input onChange={usernameSignUpEdited} type="text" required placeholder="Username" className=" relative block
+                                    <input onChange={inputEdited} name="usernameSignUp" type="text" required placeholder="Username" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-tertiaryColor
@@ -226,7 +223,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='passwordSignup' className="sr-only">
                                         Password
                                     </label>
-                                    <input onChange={passwordSignUpEdited} type="text" required placeholder="Password" className=" relative block
+                                    <input onChange={inputEdited} name="passwordSignUp" type="text" required placeholder="Password" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-red-500
@@ -236,7 +233,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='confirmPassword' className="sr-only">
                                         Confirm Password
                                     </label>
-                                    <input onChange={confirmPasswordEdited} type="text" required placeholder="Confirm Password" className=" relative block
+                                    <input onChange={inputEdited} name="confirmPassword" type="text" required placeholder="Confirm Password" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-red-500
@@ -252,7 +249,7 @@ export default function LogInModal(props) {
                                     className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 disabled:bg-slate-400"
                                     type="button"
                                     onClick={signUp}
-                                    disabled={!(usernameSignUp && email && confirmPassword && passwordSignUp)}
+                                    disabled={!(user.usernameSignUp && user.email && user.confirmPassword && user.passwordSignUp)}
                                 >
                                     Sign Up
                                 </button>

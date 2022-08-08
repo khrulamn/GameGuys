@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const router = require('./routes/router')
 // const {expressjwt} = require('express-jwt')
 const cors = require('cors')
-// require('dotenv').config()
+require('dotenv').config()
+
 
 //Environment variables
 const PORT = 4444

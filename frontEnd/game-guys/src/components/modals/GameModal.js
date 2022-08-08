@@ -19,8 +19,8 @@ export default function GameModal(props) {
         const token = sessionStorage.getItem("token");
 
         const data = {
-            "console": null,
-            "game": {
+            console: null,
+            game: {
                 gameID: props.data._id,
                 quantity: amount
             }
@@ -30,7 +30,7 @@ export default function GameModal(props) {
             method: 'post',
             url: 'http://localhost:4444/add-to-cart',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
                 'Authorization': `Bearer ${token}`
             },
             data: data
@@ -38,21 +38,20 @@ export default function GameModal(props) {
 
         axios(config)
             .then(function (response) {
-                console.log("response", response)
-                // if(response.data.error){
-                //     alert('error, please try again later')
-                // } else {
-                //     alert('added to cart')
-                //     console.log(JSON.stringify(response.data));
-                // } 
+                // console.log("response", response)
+                if(response.data.error){
+                    alert('error, please try again later')
+                } else {
+                    alert('added to cart')
+                    console.log(JSON.stringify(response.data));
+                } 
             })
             .then(() => {
                 props.clickHandler()
+                // window.location.reload();
             })
             .catch(function (error) {
-                console.log('error response', error.response);
-                console.log('error request', error.request);
-                console.log('error message', error.message)
+                console.log({error})
             });
     }
 
@@ -102,7 +101,7 @@ export default function GameModal(props) {
                                 Close
                             </button>
                             <button
-                                className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 disabled:bg-slate-500"
+                                className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-200 disabled:bg-slate-500"
                                 type="button"
                                 onClick={addToCart}
                                 disabled={amount === 0 || props.data.quantity === 0}

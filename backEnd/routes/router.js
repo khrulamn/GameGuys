@@ -5,6 +5,7 @@ const Console = require('../models/console')
 const Game = require('../models/game')
 const userController = require('../controllers/userController')
 const cartController = require('../controllers/cartController')
+const paymentController = require('../controllers/paymentController')
 
 //----------------------------------- Routes -------------------------------------
 //Redirect to login if not loggedIn
@@ -59,6 +60,18 @@ router.post('/add-to-cart', (req,res) => {
 
 router.get('/get-cart', (req,res) => {
     cartController.getUserCart(req,res)
+})
+
+router.get('/remove-from-cart', (req,res) => {
+    cartController.removeFromCart(req,res)
+})
+
+router.post("/create-payment-intent", async (req, res) => {
+    paymentController.getClientSecret(req,res)
+})
+
+router.post("/webhook", (req,res) => {
+    paymentController.paymentProcessing(req,res)
 })
 
 module.exports = router
