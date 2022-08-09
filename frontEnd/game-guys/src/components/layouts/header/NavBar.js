@@ -4,6 +4,7 @@ import LogInModal from '../../modals/LogInModal'
 import authContext from '../../../context/authContext'
 import SuccessfulLogIn from '../../modals/SuccessfulLogIn'
 import CartModal from '../../modals/CartModal'
+import OptionModal from '../../modals/OptionModal'
 
 export default function NavBar(props) {
     let url = "" // need to get rid later
@@ -38,7 +39,7 @@ export default function NavBar(props) {
                             <li><a className="hover:cursor-pointer hover:text-tertiaryColor ease-linear transition-all duration-200" href={url}>News</a></li>
                             <li><a className="hover:cursor-pointer hover:text-tertiaryColor ease-linear transition-all duration-200" href={url} >Shop</a></li>
                             <li><a className="hover:cursor-pointer hover:text-tertiaryColor ease-linear transition-all duration-200" href={url} >Search</a></li>
-                            <li><button className="hover:cursor-pointer hover:text-tertiaryColor ease-linear transition-all duration-200" onClick={() => props.cartHandler()}>Cart</button></li>
+                            <li><button className="hover:cursor-pointer hover:text-tertiaryColor ease-linear transition-all duration-200" onClick={() => props.cartHandler()} disabled={!context.isLoggedIn}>Cart</button></li>
                         </ul>
                     </div>
                     <div className='items-center justify-center'>
@@ -49,8 +50,11 @@ export default function NavBar(props) {
                 </div>
 
             </nav>
-            <CartModal cartHandler={props.cartHandler} cartAppear={props.cartAppear} />
+            <CartModal cartHandler={props.cartHandler} cartAppear={props.cartAppear} 
+            totalPrice={props.totalPrice} setTotalPrice={props.setTotalPrice} 
+            clientSecret={props.clientSecret} setClientSecret={props.setClientSecret}/>
             <LogInModal clickHandler={props.clickHandler} appear={props.appear} setAvatar={setAvatar} />
+            <OptionModal optionAppear={props.optionAppear} clickHandler={props.clickHandler} setAvatar={setAvatar}/>
             {showLoginSuccess && <SuccessfulLogIn close={closeLoginSuccess} />}
         </>
     )

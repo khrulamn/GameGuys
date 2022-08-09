@@ -5,11 +5,10 @@ const router = require('./routes/router')
 const cors = require('cors')
 require('dotenv').config()
 
-
 //Environment variables
 const PORT = 4444
-// const jwtSecret = process.env.JWT_SECRET_KEY
-const mongoDBURL = process.env.MONGO_URL || 'mongodb+srv://khrulamn:7ZnTaMuF8pI1taRJ@pokemon-website.r88ghcn.mongodb.net/GameGuys?retryWrites=true&w=majority'
+// const jwtSecret = process.env.SECRET_JWT_KEY
+const mongoDBURL = process.env.MONGO_URL
 
 const app = express()
 app.use(express.json())
@@ -17,6 +16,8 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cors({
     origin: 'http://localhost:3000'
 }))
+// 'https://417a-210-187-148-25.ap.ngrok.io'
+
 // app.use(
 //     expressjwt({
 //         secret:jwtSecret,

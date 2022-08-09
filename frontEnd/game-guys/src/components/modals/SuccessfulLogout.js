@@ -1,4 +1,4 @@
-export default function SuccessfulLogIn (props) {
+export default function SuccessfulLogout (props) {
 
     return (
         <>
@@ -7,12 +7,12 @@ export default function SuccessfulLogIn (props) {
                 >
                     <div className=" w-auto max-w-3xl" onClick={() => props.close()}>
                         {/*content*/}
-                        <div className="border-0 rounded-lg shadow-lg w-full bg-green-600 outline-none focus:outline-none px-3 py-3" >
+                        <div className="border-0 rounded-lg shadow-lg w-full bg-red-600 outline-none focus:outline-none px-3 py-3" >
                             {/*header*/}
                             <div className="flex justify-center p-5 rounded-t
                             ">
                                 <h3 className="text-lg font-semibold text-white">
-                                    You're logged in! 
+                                    You've logged out
                                 </h3>
                             </div>
                             {/*body*/}

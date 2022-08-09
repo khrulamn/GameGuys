@@ -2,9 +2,10 @@ import { useContext, useState } from 'react'
 import axios from 'axios'
 // import SuccessfulLogIn from './SuccessfulLogIn'
 import authContext from '../../context/authContext'
+import { useNavigate } from 'react-router-dom'
 
 export default function LogInModal(props) {
-
+    const navigate = useNavigate()
     const context = useContext(authContext)
     const [isLogin, setIsLogin] = useState(true)
     const [user, setUser] = useState({
@@ -32,19 +33,6 @@ export default function LogInModal(props) {
         })
     }
 
-
-
-    // const signUpBtnDisable = () => {
-    //     if(password !== ""){
-    //         if(password === confirmPassword){
-    //             return false
-    //         } else return true
-    //     } else {
-    //         return true
-    //     }
-    // }
-
-
     function signUp() {
         const data = JSON.stringify({
             "email": user.email,
@@ -62,7 +50,7 @@ export default function LogInModal(props) {
         };
 
         axios(config)
-            .then(function (response) {
+            .then((response) => {
                 console.log(JSON.stringify(response.data));
                 if (response.data.error) {
                     console.log(response.data.error)
@@ -70,7 +58,10 @@ export default function LogInModal(props) {
                     logIn(user.usernameSignUp, user.passwordSignUp)
                 }
             })
-            .catch(function (error) {
+            .then(() => {
+                navigate('/input-address')
+            })
+            .catch((error) => {
                 console.log(error);
             });
 
@@ -117,8 +108,8 @@ export default function LogInModal(props) {
                         <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-primaryColor outline-none focus:outline-none px-12 py-7">
                             <div className="absolute right-5 top-5">
                                 <button onClick={props.clickHandler}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6 hover:stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6 hover:stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>

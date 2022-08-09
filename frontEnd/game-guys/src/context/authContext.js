@@ -5,12 +5,18 @@ const AuthContext = React.createContext({
 	onLogout: () => { },
 	onLogin: () => { },
 	addedToCart: () => {},
-	addToCart:false
+	addToCart:false,
+	totalPrice: 0,
+	setTotalPrice : () => {},
+	clientSecret: "",
+	newClientSecret: () => {}
 })
 
 export const AuthContextProvider = (props) => {
 	const [isLoggedin, setIsLoggedin] = useState(false)
 	const [addToCart, setAddToCart] = useState(false)
+	const [totalPrice, setTotalPrice] = useState(0)
+	const [clientSecret, setClientSecret] = useState("")
 
 	useEffect(() => {
 		const sessionStorageLoggedIn = sessionStorage.getItem("isLoggedIn")
@@ -29,10 +35,19 @@ export const AuthContextProvider = (props) => {
 	const logoutHandler = () => {
 		setIsLoggedin(false)
 		sessionStorage.removeItem("isLoggedIn")
+		sessionStorage.removeItem("token")
 	}
 	const loginHandler = () => {
 		setIsLoggedin(true)
 		sessionStorage.setItem("isLoggedIn", '1')
+	}
+
+	const newTotalPrice = (price) => {
+		setTotalPrice(price)
+	}
+
+	const newClientSecret = (newCS) => {
+		setClientSecret(newCS)
 	}
 
 	return (
@@ -41,7 +56,11 @@ export const AuthContextProvider = (props) => {
 			onLogout: logoutHandler,
 			onLogin: loginHandler,
 			addedToCart: addedToCart,
-			addToCart: addToCart
+			addToCart: addToCart,
+			totalPrice: totalPrice,
+			setTotalPrice: newTotalPrice,
+			clientSecret: clientSecret,
+			newClientSecret: newClientSecret
 		}}>
 			{props.children}
 		</AuthContext.Provider>

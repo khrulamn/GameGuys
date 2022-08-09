@@ -29,7 +29,13 @@ const gameSchema = new mongoose.Schema({
     },
     trailer: {
         type: String
-    }
+    },
+    reviews: [{
+        user_id : String,
+        created_at : Date,
+        review_title : String,
+        review_text : String,
+    }]
 })
 
 const Game = mongoose.model('game', gameSchema)

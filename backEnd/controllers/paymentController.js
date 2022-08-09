@@ -2,18 +2,10 @@ const stripe = require("stripe")('sk_test_51LPdv4KzOPas1PZJ9HPPMuT82waXlJwdVe7Tt
 
 async function getClientSecret(req, res) {
     try {
-        // body structure {
-        //     "items" : {
-        //         "item_id" : "id",
-        //         "item_name" : "name",
-        //         "quantity" : 3 
-        //     },
-        //     total_price : 200
-        // }
         const payment = req.body
 
         const paymentIntent = await stripe.paymentIntents.create({
-            amount: payment.total_price,
+            amount: payment.total_price * 100,
             currency: 'myr',
             automatic_payment_methods: {
                 enabled: true,

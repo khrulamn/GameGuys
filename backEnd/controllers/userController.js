@@ -1,9 +1,11 @@
 const User = require('../models/user')
 const bcrypt = require('bcrypt');
+const mongoose = require('mongoose')
 const Cart = require('../models/cart');
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+require('dotenv').config()
 
-const SECRETKEY = process.env.JWT_SECRET_KEY || "WowWaNotherc0olS3ccreT"
+const SECRETKEY = process.env.SECRET_JWT_KEY
 
 const encryptPassword = async (password) => {
     const salt = await bcrypt.genSalt(10);
@@ -60,11 +62,11 @@ const logInUser = async (req, res) => {
             const validPassword = await bcrypt.compare(pwAttempt, user.password)
             if (validPassword) {
                 const userCredentials = {
-                    userID : user._id,
-                    username : user.username,
+                    userID: user._id,
+                    username: user.username,
                 }
                 let token = jwt.sign(userCredentials, SECRETKEY)
-                res.status(200).send({ message: "Successfully logged in!", token, userID : user._id, username : user.username, avatar:user.avatar })
+                res.status(200).send({ message: "Successfully logged in!", token, userID: user._id, username: user.username, avatar: user.avatar })
             }
             else {
                 res.status(400).send({ error: "Invalid password!" })
@@ -74,12 +76,74 @@ const logInUser = async (req, res) => {
             res.status(401).send({ error: "User does not exist" })
         }
     }
-    catch (error) {
-        res.error(error)
+    catch (err) {
+        res.send({ err })
     }
+}
+
+const getUserAddress = async (req, res) => {
+    //Getting userID from auth header token
+    const token = req.headers.authorization.split(" ")[1]
+    const userDetails = jwt.verify(token, SECRETKEY)
+    const userID = userDetails.userID
+
+    try {
+        let user = await User.findOne({ _id: mongoose.Types.ObjectId(userID) })
+        console.log('address',user.address)
+        if (user.address === {}) {
+            res.send({ noAddress: "No address found for this user" })
+        }
+        else {
+            res.send({ address: user.address })
+        }
+    }
+    catch (error) {
+        console.error(error)
+        res.send({ error })
+    }
+}
+
+const addUserAddress = (req, res) => {
+    //Getting userID from auth header token
+    const token = req.headers.authorization.split(" ")[1]
+    const userDetails = jwt.verify(token, SECRETKEY)
+    const userID = userDetails.userID
+    const addressInput = req.body
+
+    console.log("hit", userID)
+    // try {
+        User.updateOne(
+            { _id: mongoose.Types.ObjectId(userID) },
+            {
+                $set:
+                {
+                    address : {
+                        address : addressInput.address,
+                        state : addressInput.state,
+                        postcode : addressInput.postcode
+                    }
+                }
+            },
+            {
+                upsert: true
+            }
+        )
+        .then ((result) => {
+            console.log(result)
+            res.send({success : result})
+        })
+        .catch((error) => {
+            res.send({error})
+        })
+    // }
+    // catch(error){
+    //     res.send({error2 : error})
+    // }
 }
 
 module.exports = {
     signUpUser,
-    logInUser
+    logInUser,
+    getUserAddress,
+    addUserAddress
 }

@@ -2,28 +2,25 @@ import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
 import Cart from '../cart/Cart'
 import authContext from '../../context/authContext'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function CartModal(props) {
 
     const [consoleCartItems, setConsoleCartItems] = useState([])
     const [gameCartItems, setGameCartItems] = useState([])
-    const [totalPrice, setTotalPrice] = useState(0)
 
     const context = useContext(authContext)
+    const navigate = useNavigate()
 
+    //get cart items whenever user is logged in
     useEffect(() => {
         if (context.isLoggedIn) {
             getCart()
         }
     }, [context.isLoggedIn])
 
-    useEffect(() => {
-        if (context.addToCart){
-            getCart()
-        }
-    }, [context.addedToCart, context.addToCart])
-
+    //get cart items (stored in two arrays [console], [game])
     function getCart() {
         const token = sessionStorage.getItem("token");
 
@@ -49,22 +46,44 @@ export default function CartModal(props) {
         }
     }
 
+    //get total price for both category of items in cart
     useEffect(() => {
         function getTotalPrice() {
             let total = 0
-            consoleCartItems.map((item) => {
+            consoleCartItems.forEach((item) => {
                 total += (item.price * item.quantity)
-                return total
             })
-            gameCartItems.map((item) => {
+            gameCartItems.forEach((item) => {
                 total += (item.price * item.quantity)
-                return total
             })
             return total
         }
-        let price = getTotalPrice().toFixed(2)
-        setTotalPrice(price)
+        let price = getTotalPrice()
+        context.setTotalPrice(price)
     }, [consoleCartItems, gameCartItems])
+
+    //create payment intent to use when checkout
+    useEffect(() => {
+        if (context.totalPrice !== 0) {
+            axios.post('http://localhost:4444/create-payment-intent', {
+                total_price: context.totalPrice
+            }).then((response) => {
+                if (response.data.error) {
+                    console.log({ error: response.data.error })
+                }
+                context.newClientSecret(response.data.clientSecret)
+            })
+        }
+    }, [context.totalPrice])
+
+    //when checkout button is clicked
+    function toCheckout(){
+        props.cartHandler()
+        navigate('/checkout')
+    }
+
+    console.log("clientsecret", context.clientSecret)
+    console.log('totalprice', context.totalPrice)
 
     if (props.cartAppear) {
         return (
@@ -78,8 +97,8 @@ export default function CartModal(props) {
                             {/*header*/}
                             <div className="absolute right-5 top-5">
                                 <button onClick={props.cartHandler}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
@@ -97,20 +116,20 @@ export default function CartModal(props) {
                                         {consoleCartItems.length !== 0 &&
                                             <div>
                                                 <h2 className="text-white text-3xl">Consoles</h2>
-                                                {consoleCartItems.map((data, index) => <Cart key={index} data={data} />)}
+                                                {consoleCartItems.map((data, index) => <Cart key={index} data={data} consoleItem={true} getCart={getCart}/>)}
                                             </div>
                                         }
 
                                         {gameCartItems.length !== 0 &&
                                             <div>
                                                 <h2 className="text-white text-3xl">Games</h2>
-                                                {gameCartItems.map((data, index) => <Cart key={index} data={data} />)}
+                                                {gameCartItems.map((data, index) => <Cart key={index} data={data} gameItem={true} getCart={getCart}/>)}
                                             </div>
                                         }
                                         <div className='flex justify-end'>
                                             <div>
                                                 <h3 className="text-white text-2xl">Total price:</h3>
-                                                <p className="text-white text-xl">RM{totalPrice}</p>
+                                                <p className="text-white text-xl font-sans">RM {context.totalPrice.toFixed(2)}</p>
                                             </div>
                                         </div>
 
@@ -124,7 +143,8 @@ export default function CartModal(props) {
                                 <button
                                     className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none disabled:bg-slate-400 ease-linear transition-all duration-150"
                                     type="button"
-                                    onClick={() => props.cartHandler()}
+                                    onClick={toCheckout}
+                                    disabled={consoleCartItems.length === 0 && gameCartItems.length === 0}
                                 >
                                     Checkout
                                 </button>
@@ -132,7 +152,8 @@ export default function CartModal(props) {
                         </div>
                     </div>
                 </div>
-                <div className="opacity-50 fixed inset-0 z-40 bg-black" onClick={() => props.cartHandler()}></div>
+                <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
+
             </>
         )
     }

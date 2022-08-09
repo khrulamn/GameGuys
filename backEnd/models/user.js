@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
     },
     created_at: {
         type: Date,
+    },
+    address : {
+        address: String,
+        state : String,
+        postcode: String
     }
 })
 
