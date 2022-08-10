@@ -1,11 +1,13 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import BoughtItems from '../../components/boughtItems/BoughtItems';
 
 export default function ShoppingHistory () {
 
     const [gameItems, setGameItems] = useState([])
     const [consoleItems, setConsoleItems] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         const getPurchaseHistory = () => {
@@ -59,7 +61,7 @@ export default function ShoppingHistory () {
                     <button
                         className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 disabled:bg-slate-400"
                         type="button"
-                        onClick={() => {}}
+                        onClick={() => navigate('/')}
                     >
                         Back to home
                     </button>

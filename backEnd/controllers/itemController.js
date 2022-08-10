@@ -79,11 +79,51 @@ function reviewConsole(req,res){
     })
 }
 
+function minusGameQty (req,res) {
+    let data = req.body
+
+    let query = {
+        _id : mongoose.Types.ObjectId(data.item_id)
+    }
+
+    let decrement = {
+        $inc : {
+            quantity : -(data.qtyToMinus)
+        }
+    }
+
+    Game.updateOne(query, decrement, (err,result) => {
+        if (err) res.send({error : err})
+        else res.send({result})
+    })
+}
+
+function minusConsoleQty (req,res) {
+    let data = req.body
+
+    let query = {
+        _id : mongoose.Types.ObjectId(data.item_id)
+    }
+
+    let decrement = {
+        $inc : {
+            quantity : -(data.qtyToMinus)
+        }
+    }
+
+    Console.updateOne(query, decrement, (err,result) => {
+        if (err) res.send({error : err})
+        else res.send({result})
+    })
+}
+
 module.exports = {
     getAllConsoleItems,
     getAllGameItems,
     getOneConsole,
     getOneGame,
     reviewGame,
-    reviewConsole
+    reviewConsole,
+    minusGameQty,
+    minusConsoleQty
 }

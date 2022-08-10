@@ -51,6 +51,14 @@ router.post('/review-game', (req,res) => {
     itemController.reviewGame(req,res)
 })
 
+router.post('/minus-game-stock', (req,res) => {
+    itemController.minusGameQty(req,res)
+})
+
+router.post('/minus-console-stock', (req,res) => {
+    itemController.minusConsoleQty(req,res)
+})
+
 // USER RELATED
 router.post('/signup', (req,res) => {
     userController.signUpUser(req,res)
@@ -67,6 +75,10 @@ router.get('/user-address', (req,res) => {
 router.post('/add-address', (req,res) => {
     userController.addUserAddress(req,res)
 })
+
+router.get('/get-username', (req,res) => [
+    userController.getUserName(req,res)
+])
 
 // CART RELATED
 router.post('/add-to-cart', (req,res) => {

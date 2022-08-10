@@ -7,6 +7,7 @@ const gameSchema = new mongoose.Schema({
     },
     quantity: {
         type: Number,
+        min: [0, 'No stocks left!'],
         required: true
     },
     image: {

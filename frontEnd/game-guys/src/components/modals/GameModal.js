@@ -1,13 +1,20 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import './Modal.css'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import ReactTooltip from 'react-tooltip';
+import AuthContext from '../../context/authContext';
 
 export default function GameModal(props) {
     const [amount, setAmount] = useState(0)
 
+    const navigate = useNavigate()
+
     const image = props.data.image
     const price = props.data.price.toFixed(2)
+    const context = useContext(AuthContext)
 
+    //Functions for increasing/decreasing amount to add to cart
     const inc = () => {
         setAmount(prevAmount => prevAmount + 1)
     }
@@ -38,21 +45,24 @@ export default function GameModal(props) {
 
         axios(config)
             .then(function (response) {
-                // console.log("response", response)
-                if(response.data.error){
-                    alert('error, please try again later')
+                if (response.data.error) {
+                    console.log(response.data.error)
                 } else {
-                    alert('added to cart')
+                    console.log('added to cart')
                     console.log(JSON.stringify(response.data));
-                } 
+                }
             })
             .then(() => {
                 props.clickHandler()
                 // window.location.reload();
             })
             .catch(function (error) {
-                console.log({error})
+                console.log({ error })
             });
+    }
+
+    const toReviews = () => {
+        navigate(`/user-reviews?itemID=${props.data._id}&type=game`)
     }
 
     return (
@@ -74,14 +84,27 @@ export default function GameModal(props) {
                         </div>
                         {/*body*/}
                         <div className="relative p-6 flex-auto">
-                            <h3 className="font-medium text-4xl text-white"><span className="text-tertiaryColor">RM</span> {price}</h3>
+                            <h3 className="font-medium text-4xl font-sans text-white"><span className="text-tertiaryColor font-main">RM</span> {price}</h3>
                             <p className="my-4 text-slate-300 text-lg leading-relaxed">
                                 By {props.data.developer}
                             </p>
                             <p className="my-4 text-slate-300 text-lg leading-relaxed">
                                 {props.data.description}
-                                <a className="ml-4 text-slate-500 hover:text-slate-300 ease-linear transition-all duration-150" href={props.data.trailer} target="_blank" rel="noreferrer">trailer..</a>
                             </p>
+                            <div className='flex mb-3'>
+                                <button className='mr-3' data-tip="To user reviews" onClick={toReviews}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-slate-500 hover:stroke-white ease-linear transition-all duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                                    </svg>
+                                </button>
+                                <button className='mx-3' data-tip='Watch trailer'>
+                                    <a href={props.data.trailer} target="_blank" rel="noreferrer">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-slate-500 hover:stroke-white ease-linear transition-all duration-150" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                                        </svg>
+                                    </a>
+                                </button>
+                            </div>
                             <div className='flex justify-between'>
                                 <p className="text-slate-400">In stock: {props.data.quantity}</p>
 
@@ -90,7 +113,8 @@ export default function GameModal(props) {
                                     <p className='text-tertiaryColor text-3xl font-medium mr-3'>{amount}</p>
                                     <button className='text-white text-2xl font-sans font-extrabold mr-3 disabled:text-slate-600 hover:text-tertiaryColor ease-linear transition-all duration-150' onClick={inc} disabled={amount >= props.data.quantity}>+</button>
                                 </div>
-                            </div>                        </div>
+                            </div>
+                        </div>
                         {/*footer*/}
                         <div className="flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b">
                             <button
@@ -104,7 +128,8 @@ export default function GameModal(props) {
                                 className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-200 disabled:bg-slate-500"
                                 type="button"
                                 onClick={addToCart}
-                                disabled={amount === 0 || props.data.quantity === 0}
+                                disabled={amount === 0 || props.data.quantity === 0 || !context.isLoggedIn}
+                                data-tip="Add to cart"
                             >
                                 Add to Cart
                             </button>
@@ -113,6 +138,7 @@ export default function GameModal(props) {
                 </div>
             </div>
             <div className="opacity-50 fixed inset-0 z-40 bg-black"></div>
+            <ReactTooltip />
         </>
     )
 }

@@ -9,6 +9,7 @@ import InputAddress from './views/inputAddress/InputAddress';
 import AuthContext from './context/authContext';
 import ShoppingHistory from './views/shoppingHistory/ShoppingHistory';
 import Review from './views/reviews/Review';
+import UserReviews from './views/userReviews/UserReviews';
 
 function App() {
 	const [showLogInModal, setShowLogInModal] = useState(false)
@@ -46,6 +47,7 @@ function App() {
 						<Route path='/input-address' element={<InputAddress /> } />
 						<Route path='/shopping-history' element={<ShoppingHistory/>}/>
 						<Route path='/review-item' element={<Review/>}/>
+						<Route path='/user-reviews' element={<UserReviews/>}/>
 					</Routes>
 				</MainLayout>
 			</BrowserRouter>

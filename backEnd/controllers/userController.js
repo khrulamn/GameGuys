@@ -38,16 +38,16 @@ async function signUpUser(req, res) {
                 })
             }
             else {
-                res.status(401).send({ error: "Username is already taken!" })
+                res.send({ error: "Username is already taken!" })
             }
         }
         else {
-            res.status(401).send({ error: "Email is already taken!" })
+            res.send({ error: "Email is already taken!" })
         }
     }
     catch (error) {
         console.log(error)
-        res.status(500).send({ error })
+        res.send({ error : "Ensure all details are entered correctly"})
     }
 
 }
@@ -69,7 +69,7 @@ const logInUser = async (req, res) => {
                 res.status(200).send({ message: "Successfully logged in!", token, userID: user._id, username: user.username, avatar: user.avatar })
             }
             else {
-                res.status(400).send({ error: "Invalid password!" })
+                res.status(400).send({ error: "Invalid password" })
             }
         }
         else {
@@ -77,7 +77,7 @@ const logInUser = async (req, res) => {
         }
     }
     catch (err) {
-        res.send({ err })
+        res.send({ error: "Ensure details are correct" })
     }
 }
 
@@ -141,9 +141,26 @@ const addUserAddress = (req, res) => {
     // }
 }
 
+const getUserName = async (req,res) => {
+    //Getting userID from auth header token
+    const token = req.headers.authorization.split(" ")[1]
+    const userDetails = jwt.verify(token, SECRETKEY)
+    const userID = userDetails.userID
+
+    try{
+        let user = await User.findOne({ _id: mongoose.Types.ObjectId(userID) })
+        res.send({username: user.username, avatar: user.avatar , address:user.address})
+    }
+    catch (error) {
+        console.error(error)
+        res.send({ error })
+    }
+}
+
 module.exports = {
     signUpUser,
     logInUser,
     getUserAddress,
-    addUserAddress
+    addUserAddress,
+    getUserName
 }

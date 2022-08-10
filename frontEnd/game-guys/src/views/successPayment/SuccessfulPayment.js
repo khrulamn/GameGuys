@@ -14,6 +14,7 @@ export default function SuccessfulPayment() {
     const payment_id = new URLSearchParams(search).get('payment_intent')
     console.log(payment_id)
 
+    // to fetch paid item data from cart first
     useEffect(() => {
         const getCart = () => {
             const token = sessionStorage.getItem("token");
@@ -39,6 +40,63 @@ export default function SuccessfulPayment() {
         getCart()
     }, [])
 
+    //function to reduce stock after purchasing
+    const reduceStock = (type) => {
+        const token = sessionStorage.getItem('token')
+
+        if (consolePaidItems.length > 0) {
+            for (const item of consolePaidItems) {
+                let data = {
+                    item_id: item._id,
+                    qtyToMinus: item.quantity
+                }
+                const config = {
+                    method: 'post',
+                    url: 'http://localhost:4444/minus-console-stock',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    data: data
+                };
+                axios(config)
+                    .then(function (response) {
+                        if (response.data.error) {
+                            console.log(response.data.error)
+                        }
+                        else {
+                            console.log(response.data.result)
+                        }
+                    })
+            }
+        }
+
+        if (gamePaidItems.length > 0) {
+            for (const item of gamePaidItems) {
+                let data = {
+                    item_id: item._id,
+                    qtyToMinus: item.quantity
+                }
+                const config = {
+                    method: 'post',
+                    url: 'http://localhost:4444/minus-game-stock',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    data: data
+                };
+                axios(config)
+                    .then(function (response) {
+                        if (response.data.error) {
+                            console.log(response.data.error)
+                        }
+                        else {
+                            console.log(response.data.result)
+                        }
+                    })
+            }
+        }
+    }
+
     const paymentSuccess = () => {
         const token = sessionStorage.getItem("token");
 
@@ -48,7 +106,7 @@ export default function SuccessfulPayment() {
             game_items: gamePaidItems
         };
 
-        //adding purchase to purchase collection
+        //adding purchase to purchase collection in db
         const config = {
             method: 'post',
             url: 'http://localhost:4444/purchase-success',
@@ -86,6 +144,9 @@ export default function SuccessfulPayment() {
                         else {
                             console.log(response.data.result)
                         }
+                    })
+                    .then(() => {
+                        reduceStock()
                     })
                     .then(() => {
                         navigate('/')

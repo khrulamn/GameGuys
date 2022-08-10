@@ -7,7 +7,12 @@ import { useNavigate } from 'react-router-dom'
 export default function LogInModal(props) {
     const navigate = useNavigate()
     const context = useContext(authContext)
+    // to track login
     const [isLogin, setIsLogin] = useState(true)
+    //for error messages
+    const [errorMessage, setErrorMessage] = useState("")
+    const [signUpError, setSignUpError] = useState("")
+    //user inputs
     const [user, setUser] = useState({
         email: "",
         username: "",
@@ -21,6 +26,7 @@ export default function LogInModal(props) {
         setUser((prev) => ({ ...prev, [e.target.name]: e.target.value }))
     }
 
+    //function to change to signup modal
     const toSignUp = () => {
         setIsLogin(!isLogin)
         setUser({
@@ -33,7 +39,13 @@ export default function LogInModal(props) {
         })
     }
 
+    //function when user clicks sign up
     function signUp() {
+        if (user.passwordSignUp !== user.confirmPassword){
+            setSignUpError("Password fields must be the same!")
+            return 
+        }
+
         const data = JSON.stringify({
             "email": user.email,
             "username": user.usernameSignUp,
@@ -51,15 +63,13 @@ export default function LogInModal(props) {
 
         axios(config)
             .then((response) => {
-                console.log(JSON.stringify(response.data));
                 if (response.data.error) {
                     console.log(response.data.error)
+                    setSignUpError(response.data.error)
                 } else {
                     logIn(user.usernameSignUp, user.passwordSignUp)
+                    navigate('/input-address')
                 }
-            })
-            .then(() => {
-                navigate('/input-address')
             })
             .catch((error) => {
                 console.log(error);
@@ -67,6 +77,7 @@ export default function LogInModal(props) {
 
     }
 
+    //function when user clicks login
     function logIn(userName, passWord) {
         var data = JSON.stringify({
             "username": userName,
@@ -84,17 +95,32 @@ export default function LogInModal(props) {
 
         axios(config)
             .then(function (response) {
-                let data = response.data
-                // console.log(JSON.stringify(response.data));
-                props.setAvatar(data.avatar)
-                sessionStorage.setItem("token", data.token)
-                sessionStorage.setItem("avatar", data.avatar)
-                context.onLogin()
-                props.clickHandler()
+                if (response.data.error) {
+                    console.log('error mann', response.data.error)
+                    setErrorMessage(response.data.error)
+                }
+                else {
+                    let data = response.data
+                    console.log('login try', data)
+                    props.setAvatar(data.avatar)
+                    sessionStorage.setItem("token", data.token)
+                    sessionStorage.setItem("avatar", data.avatar)
+                    context.onLogin()
+                    props.clickHandler()
+                }
+
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error)
             });
+    }
+
+    const removeErrorMsg = () => {
+        setErrorMessage("")
+    }
+
+    const removeSignUpError = () => {
+        setSignUpError("")
     }
 
     if (props.appear && isLogin) {
@@ -133,17 +159,27 @@ export default function LogInModal(props) {
                   focus:outline-none focus:ring-tertiaryColor
                   focus:border-tertiaryColor focus:z-10 sm:text-sm" />
                                 </div>
-                                <div className="pt-4 pb-10">
+                                <div className="pt-4 pb-6">
                                     <label htmlFor='passwordLogin' className="sr-only">
                                         Password
                                     </label>
-                                    <input onChange={inputEdited} name="password" type="text" required placeholder="Password" className=" relative block
+                                    <input onChange={inputEdited} name="password" type="password" required placeholder="Password" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-red-500
                   focus:border-red-500 focus:z-10 sm:text-sm" />
                                 </div>
                             </div>
+                            {errorMessage !== "" &&
+                                <div className='flex justify-center items-center mb-4'>
+                                    <button onClick={removeErrorMsg}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>
+                                    <p className='text-red-500 text-lg font-semibold mx-3'>{errorMessage}</p>
+                                </div>
+                            }
                             {/*footer*/}
                             <div>
                                 <button className="text-white hover:underline" onClick={toSignUp}>Don't have an account? Sign up here.</button>
@@ -177,8 +213,8 @@ export default function LogInModal(props) {
                             {/*header*/}
                             <div className="absolute right-5 top-5">
                                 <button onClick={props.clickHandler}>
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6 hover:stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="stroke-white h-6 w-6 hover:stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
                             </div>
@@ -214,7 +250,7 @@ export default function LogInModal(props) {
                                     <label htmlFor='passwordSignup' className="sr-only">
                                         Password
                                     </label>
-                                    <input onChange={inputEdited} name="passwordSignUp" type="text" required placeholder="Password" className=" relative block
+                                    <input onChange={inputEdited} name="passwordSignUp" type="password" required placeholder="Password" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-red-500
@@ -224,15 +260,25 @@ export default function LogInModal(props) {
                                     <label htmlFor='confirmPassword' className="sr-only">
                                         Confirm Password
                                     </label>
-                                    <input onChange={inputEdited} name="confirmPassword" type="text" required placeholder="Confirm Password" className=" relative block
+                                    <input onChange={inputEdited} name="confirmPassword" type="password" required placeholder="Confirm Password" className=" relative block
                   w-full px-3 py-2 border border-gray-300
                   placeholder-gray-500 text-gray-900 rounded-md
                   focus:outline-none focus:ring-red-500
                   focus:border-red-500 focus:z-10 sm:text-sm" />
                                 </div>
                             </div>
+                            {signUpError !== "" &&
+                                <div className='flex justify-center items-center mb-4'>
+                                    <button onClick={removeSignUpError}>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 stroke-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    </button>
+                                    <p className='text-red-500 text-lg font-semibold mx-3'>{signUpError}</p>
+                                </div>
+                            }
                             {/*footer*/}
-                            <div>
+                            <div className='text-center'>
                                 <button className="text-white hover:underline" onClick={toSignUp}>Already have an account? Log in here.</button>
                             </div>
                             <div className="flex items-center justify-center p-6">

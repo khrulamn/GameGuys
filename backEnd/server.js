@@ -1,13 +1,13 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const router = require('./routes/router')
-// const {expressjwt} = require('express-jwt')
+const {expressjwt} = require('express-jwt')
 const cors = require('cors')
 require('dotenv').config()
 
 //Environment variables
 const PORT = 4444
-// const jwtSecret = process.env.SECRET_JWT_KEY
+const jwtSecret = process.env.SECRET_JWT_KEY
 const mongoDBURL = process.env.MONGO_URL
 
 const app = express()
@@ -18,12 +18,12 @@ app.use(cors({
 }))
 // 'https://417a-210-187-148-25.ap.ngrok.io'
 
-// app.use(
-//     expressjwt({
-//         secret:jwtSecret,
-//         algorithms: ["HS256"],
-//     }).unless({ path: ["/login", "/signup"] })
-// );
+app.use(
+    expressjwt({
+        secret:jwtSecret,
+        algorithms: ["HS256"],
+    }).unless({ path: ["/get-consoles", "/get-games", "/signup", "/login"] })
+);
 
 mongoose.connect(mongoDBURL, {
     useNewUrlParser : true,

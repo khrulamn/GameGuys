@@ -44,9 +44,9 @@ export default function InStock(props) {
     if (props.console) {
         return (
             <React.Fragment>
-                <div className="">
-                    <h1 className="text-3xl text-white font-normal">Consoles</h1>
-                    <div className='flex flex-wrap'>
+                <div className="m-10">
+                    <h1 className="text-3xl text-white font-semibold text-center">Consoles</h1>
+                    <div className='grid grid-flow-col'>
                         {consoleStock.length === 0
                             ? <p>Please wait</p>
                             : consoleStock.map((data, index) => <InStockConsole key={index} data={data} />)}
@@ -58,9 +58,9 @@ export default function InStock(props) {
 
     if (props.game) {
         return (
-            <div className="">
-                <h1 className="text-3xl text-white font-normal">Games</h1>
-                <div className='flex flex-wrap'>
+            <div className="m-10">
+                <h1 className="text-3xl text-white font-semibold text-center">Games</h1>
+                <div className='grid grid-flow-col'>
                     {gameStock.length === 0
                         ? <p>Please wait</p>
                         : gameStock.map((data, index) => <InStockGame key={index} data={data} />)}

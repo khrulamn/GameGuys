@@ -57,30 +57,41 @@ export default function OptionModal(props) {
                             </div>
                             {/*body*/}
                             <div className="flex flex-col items-center justify-center">
-                                <div className="p-2">
-                                    <button className="text-white font-semibold hover:text-tertiaryColor text-xl"
-                                    onClick={toPurchaseHistory}>
-                                        Shopping History
-                                        </button>
-                                </div>
-
-                                <div className="p-2">
-                                    <button className="text-white font-semibold hover:text-tertiaryColor text-xl"
-                                    onClick={toInputAddress}>
-                                        Edit Shipping Address
+                                <div className="p-2 ">
+                                    <button className="text-white font-semibold hover:text-tertiaryColor text-xl ease-linear transition-all duration-300"
+                                        onClick={toPurchaseHistory}>
+                                        <div className="flex items-center text-xl font-semibold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                            </svg>
+                                            <p className="ml-2">Shopping History</p>
+                                        </div>
                                     </button>
                                 </div>
 
-                            </div>
+                                <div className="p-2">
+                                    <button className="text-white font-semibold hover:text-tertiaryColor text-xl ease-linear transition-all duration-300"
+                                        onClick={toInputAddress}>
+                                        <div className="flex items-center text-xl font-semibold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                            </svg>
+                                            <p className=" ml-2">Edit Shipping Address</p>
+                                        </div>
+                                    </button>
+                                </div>
 
-                            <div className="flex items-center justify-center p-6">
-                                <button
-                                    className="bg-tertiaryColor hover:bg-[#f58284] text-white active:bg-[#f04d50] font-bold uppercase text-sm px-4 py-2 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 disabled:bg-slate-400"
-                                    type="button"
-                                    onClick={logOut}
-                                >
-                                    Log Out
-                                </button>
+                                <div className="p-2">
+                                    <button className="text-white font-semibold hover:text-tertiaryColor text-xl ease-linear transition-all duration-300"
+                                    onClick={logOut}>
+                                        <div className="flex items-center text-xl font-semibold">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 stroke-tertiaryColor ease-linear transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                            <p className="ml-2">Logout</p>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

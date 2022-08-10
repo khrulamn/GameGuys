@@ -77,7 +77,7 @@ export default function CartModal(props) {
     }, [context.totalPrice])
 
     //when checkout button is clicked
-    function toCheckout(){
+    function toCheckout() {
         props.cartHandler()
         navigate('/checkout')
     }
@@ -111,19 +111,26 @@ export default function CartModal(props) {
                             {/*body*/}
                             <div className="rounded-md shadow-sm -space-y-px">
                                 {(consoleCartItems.length === 0 && gameCartItems.length === 0)
-                                    ? <p className='text-white'>You have no items in cart!</p>
-                                    : (<div className='flex flex-col justify-center font-main'>
+                                    ?
+                                    <div className='flex flex-col justify-center items-center'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 stroke-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                        </svg>
+                                        <p className='text-white mt-3 text-lg'>You have no items in cart!</p>
+                                    </div>
+                                    :
+                                    (<div className='flex flex-col justify-center font-main'>
                                         {consoleCartItems.length !== 0 &&
                                             <div>
                                                 <h2 className="text-white text-3xl">Consoles</h2>
-                                                {consoleCartItems.map((data, index) => <Cart key={index} data={data} consoleItem={true} getCart={getCart}/>)}
+                                                {consoleCartItems.map((data, index) => <Cart key={index} data={data} consoleItem={true} getCart={getCart} />)}
                                             </div>
                                         }
 
                                         {gameCartItems.length !== 0 &&
                                             <div>
                                                 <h2 className="text-white text-3xl">Games</h2>
-                                                {gameCartItems.map((data, index) => <Cart key={index} data={data} gameItem={true} getCart={getCart}/>)}
+                                                {gameCartItems.map((data, index) => <Cart key={index} data={data} gameItem={true} getCart={getCart} />)}
                                             </div>
                                         }
                                         <div className='flex justify-end'>
