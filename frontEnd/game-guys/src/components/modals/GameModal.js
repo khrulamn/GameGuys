@@ -54,7 +54,7 @@ export default function GameModal(props) {
             })
             .then(() => {
                 props.clickHandler()
-                // window.location.reload();
+                context.addedToCart()
             })
             .catch(function (error) {
                 console.log({ error })

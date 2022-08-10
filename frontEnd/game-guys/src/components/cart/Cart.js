@@ -1,8 +1,10 @@
 import axios from 'axios'
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import AuthContext from '../../context/authContext';
 
 export default function Cart(props) {
     const [removeClicked, setRemoveClicked] = useState(0)
+    const context = useContext(AuthContext)
 
     //remove item from the cart
     function removeItem(){
@@ -46,10 +48,10 @@ export default function Cart(props) {
 
     }
 
-    //update cart everytime remove button is clicked
+    //update cart everytime remove and add to cart button is clicked
     useEffect(() => {
         props.getCart()
-    }, [removeClicked])
+    }, [removeClicked, context.addToCart])
 
     let price = props.data.price.toFixed(2)     //format price to have two decimals
 

@@ -8,7 +8,7 @@ export default function Home() {
             <div className="w-90vw flex justify-center relative">
                 <div className="">
                     <img
-                        className="w-[100vw] h-[45vh] object-cover"
+                        className="w-[100vw] h-[45vh] object-cover rounded-b-md"
                         src={"https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80"}
                         alt="banner" />
                 </div>

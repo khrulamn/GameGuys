@@ -4,7 +4,7 @@ import axios from 'axios'
 import UserItemReviews from "../../components/reviews/UserItemReviews"
 
 export default function UserReviews() {
-    const [item, setItem] = useState({})
+    const [itemReview, setItemReview] = useState(null)
     //to get game/console data from query
     const search = useLocation().search
     const itemID = new URLSearchParams(search).get('itemID')
@@ -12,6 +12,7 @@ export default function UserReviews() {
 
     //Use effect to get complete game/console data
     useEffect(() => {
+        console.log('useEffect')
         if (type === "game") {
             const token = sessionStorage.getItem("token");
             const config = {
@@ -24,7 +25,8 @@ export default function UserReviews() {
 
             axios(config)
                 .then(function (response) {
-                    setItem(response.data.result[0])
+                    console.log('response yes',response.data)
+                    setItemReview(response.data.result[0])
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -42,7 +44,8 @@ export default function UserReviews() {
 
             axios(config)
                 .then(function (response) {
-                    setItem(response.data.result[0])
+                    console.log('response yes',response.data)
+                    setItemReview(response.data.result[0])
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -57,7 +60,7 @@ export default function UserReviews() {
         navigate('/')
     }
 
-    console.log('item', item)
+    // console.log('item user id', itemReview.user_id)
 
     return (
         <div className="bg-secondaryColor min-h-[calc(100vh-160px)] font-main">
@@ -66,18 +69,18 @@ export default function UserReviews() {
                     <div className="ml-5 text-center my-11">
                         <h1 className="text-white text-4xl font-semibold">User Reviews</h1>
                     </div>
-                    {Object.keys(item).length !== 0 &&
+                    {itemReview !== null &&
                         <>
                             <div className="flex mb-7">
                                 <div>
-                                    <img className="w-3/4" src={item.image} alt='item' />
+                                    <img className="w-3/4" src={itemReview.image} alt='item' />
                                 </div>
                                 <div>
                                     <div className="mx-auto my-9">
-                                        <h1 className="text-tertiaryColor font-semibold text-3xl">{item.name}</h1>
+                                        <h1 className="text-tertiaryColor font-semibold text-3xl">{itemReview.name}</h1>
                                     </div>
                                     <div>
-                                        <p className="text-white">{item.description}</p>
+                                        <p className="text-white">{itemReview.description}</p>
                                     </div>
                                 </div>
                             </div>
@@ -85,10 +88,10 @@ export default function UserReviews() {
                     }
                     <div>
 
-                        {Object.keys(item.reviews).length !== 0
+                        {itemReview?.reviews !== null
                             ?
                             <div>
-                                {item.reviews && item.reviews.map((data, index) => <UserItemReviews key={index} data={data} />)}
+                                {itemReview?.reviews && itemReview.reviews.map((data, index) => <UserItemReviews key={index} data={data} />)}
                             </div>
                             :
                             <div className='flex flex-col justify-center items-center bg-gray-700 rounded-md p-5'>

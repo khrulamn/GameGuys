@@ -45,7 +45,7 @@ export default function InStock(props) {
         return (
             <React.Fragment>
                 <div className="m-10">
-                    <h1 className="text-3xl text-white font-semibold text-center">Consoles</h1>
+                    <h1 className="text-3xl text-white font-semibold text-center mb-3">Consoles</h1>
                     <div className='grid grid-flow-col'>
                         {consoleStock.length === 0
                             ? <p>Please wait</p>
@@ -59,7 +59,7 @@ export default function InStock(props) {
     if (props.game) {
         return (
             <div className="m-10">
-                <h1 className="text-3xl text-white font-semibold text-center">Games</h1>
+                <h1 className="text-3xl text-white font-semibold text-center mb-3">Games</h1>
                 <div className='grid grid-flow-col'>
                     {gameStock.length === 0
                         ? <p>Please wait</p>

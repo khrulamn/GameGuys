@@ -80,6 +80,10 @@ router.get('/get-username', (req,res) => [
     userController.getUserName(req,res)
 ])
 
+router.post('/get-user-deets', (req,res) => {
+    userController.getUserDeets(req,res)
+})
+
 // CART RELATED
 router.post('/add-to-cart', (req,res) => {
     console.log("adding to cart....")

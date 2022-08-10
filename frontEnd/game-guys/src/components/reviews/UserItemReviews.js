@@ -11,10 +11,13 @@ export default function UserItemReviews(props) {
     useEffect(() => {
         const token = sessionStorage.getItem("token");
         const config = {
-            method: 'get',
-            url: `http://localhost:4444/get-username`,
+            method: 'post',
+            url: `http://localhost:4444/get-user-deets`,
             headers: {
                 'Authorization': `Bearer ${token}`
+            },
+            data : {
+                userID : data.user_id
             }
         };
 
@@ -28,8 +31,9 @@ export default function UserItemReviews(props) {
             });
     }, [])
 
+    console.log('userid?',data.user_id)
     return (
-        <div className='bg-gray-700 rounded-md p-5 relative'>
+        <div className='bg-gray-700 rounded-md p-5 relative border border-solid border-primaryColor'>
           
                 <>
                     <div className='flex w-full'>

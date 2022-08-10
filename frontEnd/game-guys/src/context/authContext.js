@@ -5,7 +5,7 @@ const AuthContext = React.createContext({
 	onLogout: () => { },
 	onLogin: () => { },
 	addedToCart: () => {},
-	addToCart:false,
+	addToCart: 0,
 	totalPrice: 0,
 	setTotalPrice : () => {},
 	clientSecret: "",
@@ -26,10 +26,7 @@ export const AuthContextProvider = (props) => {
 	}, [])
 
 	const addedToCart = () => {
-		setAddToCart(!addToCart)
-		setTimeout(() => {
-			setAddToCart(!addToCart)
-		}, 2000)
+		setAddToCart((prev) => prev + 1)
 	}
 
 	const logoutHandler = () => {

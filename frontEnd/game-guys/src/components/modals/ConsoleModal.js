@@ -53,6 +53,9 @@ export default function ConsoleModal(props) {
                     props.clickHandler()
                 }
             })
+            .then(() => {
+                context.addedToCart()
+            })
             .catch(function (error) {
                 console.log(error);
             });

@@ -147,6 +147,24 @@ const getUserName = async (req,res) => {
     const userDetails = jwt.verify(token, SECRETKEY)
     const userID = userDetails.userID
 
+    let data = req.body
+    console.log('user id yeah',req.body.userID)
+
+    try{
+        let user = await User.findOne({ _id: mongoose.Types.ObjectId(userID) })
+        res.send({username: user.username, avatar: user.avatar , address:user.address})
+    }
+    catch (error) {
+        console.error(error)
+        res.send({ error })
+    }
+}
+
+const getUserDeets = async (req,res) => {
+    //Getting userID from auth header token
+    let userID = req.body.userID
+    console.log('user id yeah',req.body)
+
     try{
         let user = await User.findOne({ _id: mongoose.Types.ObjectId(userID) })
         res.send({username: user.username, avatar: user.avatar , address:user.address})
@@ -162,5 +180,6 @@ module.exports = {
     logInUser,
     getUserAddress,
     addUserAddress,
-    getUserName
+    getUserName,
+    getUserDeets
 }
